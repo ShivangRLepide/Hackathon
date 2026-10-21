@@ -25,7 +25,7 @@ export default function Home() {
         setSubmitting(false);
         return;
       }
-      router.push("/upload");
+      router.push("/dashboard");
     } catch {
       setError("Sign-in failed. Check your email and password, then try again.");
       setSubmitting(false);

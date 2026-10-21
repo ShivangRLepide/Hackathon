@@ -1,6 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { scanText } from "../../../lib/detection/scan";
+import { createSupabaseServerClient } from "../../../lib/supabase/server";
 import { checkUpload, MAX_UPLOAD_BYTES } from "../../../lib/upload/validate";
 
 const NO_STORE = { "Cache-Control": "no-store" };
@@ -12,17 +11,7 @@ function reply(body: object, status: number) {
 
 // Scans in memory only: the file and its contents are not stored or logged.
 export async function POST(request: Request) {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {},
-      },
-    },
-  );
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return reply({ error: "not_signed_in" }, 401);
 

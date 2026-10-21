@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { AppNav } from "../../components/AppNav";
 import { createSupabaseBrowserClient } from "../../lib/supabase/browser";
 
 type Risk = "None" | "Low" | "Medium" | "High" | "Critical";
@@ -113,6 +114,7 @@ export default function UploadPage() {
 
   return (
     <main className="page-body">
+      <AppNav />
       <nav className="lp-breadcrumb" aria-label="Breadcrumb">
         <ol className="lp-breadcrumb__list">
           <li className="lp-breadcrumb__item">

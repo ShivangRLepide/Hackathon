@@ -41,3 +41,50 @@
   font-size: var(--typography-label-md-fontSize);
   line-height: var(--typography-label-md-lineHeight);
 }
+
+/* Wider content width for tables and metric cards. */
+.page-body--wide {
+  max-width: 960px;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-6);
+}
+
+.metric-value {
+  margin: 0;
+  font-size: var(--typography-heading-h2-fontSize);
+}
+
+/* Toggle groups: filters are plain buttons with aria-pressed (see system gap note). */
+.filter-group {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.filter-group__legend {
+  padding: 0;
+  font-size: var(--typography-label-md-fontSize);
+  line-height: var(--typography-label-md-lineHeight);
+}
+
+.filter-group__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+

@@ -32,7 +32,7 @@ test("valid credentials sign in and move to the upload page", async () => {
   mockSignIn.mockResolvedValue({ data: {}, error: null });
   render(<Home />);
   fillAndSubmit("user@example.test", "not-a-real-secret");
-  await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/upload"));
+  await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/dashboard"));
   expect(mockSignIn).toHaveBeenCalledWith({
     email: "user@example.test",
     password: "not-a-real-secret",
