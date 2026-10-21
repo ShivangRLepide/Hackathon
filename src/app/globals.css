@@ -31,6 +31,79 @@
   gap: var(--space-5);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Sign-in page: full-bleed brand background with a centred card. */
+.signin-page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-9);
+  background: var(--color-brand-primary);
+}
+
+.product-shell:has(> .signin-page) {
+  margin: 0;
+}
+
+.signin-page .signin-card.lp-card {
+  box-sizing: border-box;
+  width: min(440px, 100%);
+  background: var(--color-background-surface);
+}
+
+.signin-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font-size: var(--typography-heading-h2-fontSize);
+  font-weight: 300;
+  color: var(--color-brand-accent);
+}
+
+.signin-logo svg {
+  fill: currentColor;
+}
+
+.signin-password {
+  position: relative;
+}
+
+.signin-password .lp-input__input {
+  padding-right: var(--space-12);
+}
+
+.signin-password__toggle {
+  position: absolute;
+  top: 50%;
+  right: var(--space-4);
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  padding: var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--color-brand-primary);
+  cursor: pointer;
+}
+
+.signin-password__toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
 /* Native file input is visually hidden over a Lepidus secondary button (design.md file-input pattern). */
 .file-picker {
   display: flex;

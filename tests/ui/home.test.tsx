@@ -15,16 +15,16 @@ beforeEach(() => {
 });
 
 function fillAndSubmit(email: string, password: string) {
-  fireEvent.change(screen.getByLabelText("Work email"), { target: { value: email } });
+  fireEvent.change(screen.getByLabelText("Email"), { target: { value: email } });
   fireEvent.change(screen.getByLabelText("Password"), { target: { value: password } });
-  fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+  fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
 }
 
 test("home page shows the app name, both fields and an enabled sign-in button", () => {
   render(<Home />);
   expect(screen.getByRole("heading", { name: "MiniDSP Data Discovery" })).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Sign in" })).toBeEnabled();
-  expect(screen.getByLabelText("Work email")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Sign In" })).toBeEnabled();
+  expect(screen.getByLabelText("Email")).toBeInTheDocument();
   expect(screen.getByLabelText("Password")).toBeInTheDocument();
 });
 
