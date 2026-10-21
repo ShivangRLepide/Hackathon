@@ -103,6 +103,39 @@
   gap: var(--space-3);
 }
 
+/* Dashboard assistant: fixed to the bottom-right corner, above page content. */
+.assistant {
+  position: fixed;
+  right: var(--space-9);
+  bottom: var(--space-9);
+  z-index: 1;
+  display: grid;
+  justify-items: end;
+  gap: var(--space-5);
+}
+
+.assistant__panel {
+  width: min(360px, calc(100vw - 2 * var(--space-9)));
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.assistant__log {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.assistant__exchange {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.assistant__form {
+  display: grid;
+  gap: var(--space-5);
+  justify-items: start;
+}
+
 .page-subtitle {
   margin: 0;
   font-size: var(--typography-body-md-fontSize);

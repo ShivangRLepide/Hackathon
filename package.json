@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test:unit": "node --test tests/detection/detectors.test.ts tests/detection/fixtures.test.ts tests/detection/ambiguous.test.ts tests/upload/validate.test.ts tests/reports/reports.test.ts tests/export/csv.test.ts",
+    "test:unit": "node --test tests/detection/detectors.test.ts tests/detection/fixtures.test.ts tests/detection/ambiguous.test.ts tests/upload/validate.test.ts tests/reports/reports.test.ts tests/export/csv.test.ts tests/assistant/answer.test.ts",
     "test:ui": "vitest run",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:ui && npm run test:e2e"

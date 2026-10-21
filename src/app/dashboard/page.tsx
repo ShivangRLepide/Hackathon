@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { PageHeading } from "@/components/PageHeading";
+import { DashboardAssistant } from "@/components/DashboardAssistant";
 import { EmptyState, Notice, RiskBadge } from "@/components/Lepidus";
 import { RISKS } from "@/lib/reports/model";
 import { formatTimestamp } from "@/lib/reports/format";
@@ -139,6 +140,8 @@ export default function DashboardPage() {
           </section>
         </>
       )}
+
+      {summary && <DashboardAssistant summary={summary} />}
     </main>
   );
 }
