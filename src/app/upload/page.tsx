@@ -319,14 +319,14 @@ export default function UploadPage() {
 
             <div className="upload-actions">
               <button
-                className="lp-button lp-button--primary lp-button--md upload-submit"
+                className="lp-button lp-button--primary lp-button--md upload-action"
                 type="submit"
                 disabled={waitingCount === 0 || scanning}
               >
                 Upload and scan
               </button>
               <button
-                className="lp-button lp-button--secondary lp-button--md"
+                className="lp-button lp-button--secondary lp-button--md upload-action"
                 type="button"
                 disabled={items.length === 0 || scanning}
                 onClick={() => setItems([])}

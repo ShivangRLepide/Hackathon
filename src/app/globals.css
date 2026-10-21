@@ -143,8 +143,10 @@
   color: var(--color-text-secondary);
 }
 
-.upload-submit {
-  justify-self: start;
+/* Upload actions share one width so the primary and secondary buttons line up. */
+.upload-action {
+  min-width: 168px;
+  justify-content: center;
 }
 
 /* Upload drop zone: dashed border; highlighted while a file is dragged over it. */
@@ -244,6 +246,13 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
+}
+
+/* Scan history row actions: compact height from the sm size, one minimum width. */
+.history-action {
+  min-width: 96px;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 /* Signed-in shell: fixed rail on the left, page column fills the rest of the viewport. */

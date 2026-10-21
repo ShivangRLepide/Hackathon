@@ -165,7 +165,7 @@ export default function DashboardPage() {
                             <div className="delete-confirm">
                               <span>Delete {scan.file_name}?</span>
                               <button
-                                className="lp-button lp-button--danger lp-button--md"
+                                className="lp-button lp-button--danger lp-button--sm history-action"
                                 type="button"
                                 disabled={deletingId !== null}
                                 onClick={() => removeScan(scan.id)}
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                                 {deletingId === scan.id ? "Deleting" : "Confirm delete"}
                               </button>
                               <button
-                                className="lp-button lp-button--secondary lp-button--md"
+                                className="lp-button lp-button--secondary lp-button--sm history-action"
                                 type="button"
                                 disabled={deletingId !== null}
                                 onClick={() => setConfirmId(null)}
@@ -183,7 +183,7 @@ export default function DashboardPage() {
                             </div>
                           ) : (
                             <button
-                              className="lp-button lp-button--secondary lp-button--md"
+                              className="lp-button lp-button--secondary lp-button--sm history-action"
                               type="button"
                               aria-label={`Delete ${scan.file_name}`}
                               onClick={() => {
