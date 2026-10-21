@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AppNav } from "@/components/AppNav";
+import { PageHeading } from "@/components/PageHeading";
 import { EmptyState, Notice, RiskBadge } from "@/components/Lepidus";
 import { DETECTOR_LABEL, DETECTOR_TYPES, RISKS } from "@/lib/reports/model";
 import { formatTimestamp } from "@/lib/reports/format";
@@ -51,9 +52,13 @@ export default function FindingsPage() {
   const filtersActive = type !== "all" || risk !== "all";
 
   return (
-    <main className="page-body page-body--wide">
-      <AppNav />
-      <h1 className="page-title">Findings</h1>
+    <main className="app-main">
+      <AppNav current="findings" />
+      <PageHeading
+        current="Findings"
+        title="Findings"
+        description="Masked findings from your scans. Synthetic training data only."
+      />
 
       {failed && (
         <Notice variant="error" title="Findings unavailable">
@@ -114,6 +119,11 @@ export default function FindingsPage() {
             </div>
           )}
 
+          <div className="page-actions">
+            <a className="lp-link lp-link--standalone" href="/api/export" download>
+              Export findings CSV
+            </a>
+          </div>
           <Notice variant="info">
             The Export findings CSV link includes all findings, not only the rows shown here.
           </Notice>

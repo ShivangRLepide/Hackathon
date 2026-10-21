@@ -56,8 +56,11 @@ describe("DashboardPage", () => {
 
     const metric = screen.getByText("Files scanned").closest("section") as HTMLElement;
     expect(within(metric).getByText("2")).toBeInTheDocument();
-    const findingsMetric = screen.getByText("Findings", { selector: ".lp-card__title" }).closest("section") as HTMLElement;
+    const findingsMetric = screen.getByText("Total findings", { selector: ".lp-card__title" }).closest("section") as HTMLElement;
     expect(within(findingsMetric).getByText("4")).toBeInTheDocument();
+    const criticalMetric = screen.getByText("Critical-risk files", { selector: ".lp-card__title" }).closest("section") as HTMLElement;
+    expect(within(criticalMetric).getByText("1")).toBeInTheDocument();
+    expect(screen.getByRole("progressbar", { name: "Low share of files" })).toHaveAttribute("aria-valuenow", "50");
 
     const recent = screen.getByText("Recent scans").closest("section") as HTMLElement;
     const rows = within(recent).getAllByRole("row");

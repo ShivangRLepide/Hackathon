@@ -42,18 +42,42 @@
   line-height: var(--typography-label-md-lineHeight);
 }
 
-/* Wider content width for tables and metric cards. */
-.page-body--wide {
-  max-width: 960px;
+/* Signed-in shell: fixed rail on the left, page column to its right. */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
 }
 
-.app-nav {
+.app-main {
+  --app-rail-width: 100px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  max-width: 1040px;
+  margin-left: var(--app-rail-width);
+  padding: var(--space-9);
+  display: grid;
+  align-content: start;
+  gap: var(--space-8);
+}
+
+.page-heading {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: var(--typography-body-md-fontSize);
+  color: var(--color-text-secondary);
+}
+
+.page-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-5);
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .metric-grid {

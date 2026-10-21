@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppNav } from "@/components/AppNav";
+import { PageHeading } from "@/components/PageHeading";
 import { EmptyState, Notice, RiskBadge } from "@/components/Lepidus";
 import { RISKS } from "@/lib/reports/model";
 import { formatTimestamp } from "@/lib/reports/format";
@@ -31,9 +32,13 @@ export default function DashboardPage() {
   }, [client]);
 
   return (
-    <main className="page-body page-body--wide">
-      <AppNav />
-      <h1 className="page-title">Dashboard</h1>
+    <main className="app-main">
+      <AppNav current="dashboard" />
+      <PageHeading
+        current="Dashboard"
+        title="Dashboard"
+        description="Your scanned files and masked findings. Synthetic training data only."
+      />
 
       {failed && (
         <Notice variant="error" title="Dashboard unavailable">
@@ -60,8 +65,9 @@ export default function DashboardPage() {
         <>
           <div className="metric-grid">
             <Metric label="Files scanned" value={summary.scanCount} />
-            <Metric label="Findings" value={summary.findingTotal} />
-            <Metric label="High or Critical scans" value={summary.highOrCriticalScans} />
+            <Metric label="Total findings" value={summary.findingTotal} />
+            <Metric label="High-risk files" value={summary.riskCounts.High} />
+            <Metric label="Critical-risk files" value={summary.riskCounts.Critical} />
           </div>
 
           <section className="lp-card lp-card--elevated lp-card--borderless" aria-labelledby="risk-title">
@@ -73,19 +79,27 @@ export default function DashboardPage() {
                 <table className="lp-table__table">
                   <thead>
                     <tr>
-                      <th className="lp-table__th" scope="col">Overall risk</th>
-                      <th className="lp-table__th" scope="col">Scans</th>
+                      <th className="lp-table__th" scope="col">Risk level</th>
+                      <th className="lp-table__th" scope="col">Files</th>
+                      <th className="lp-table__th" scope="col">Share of files</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {RISKS.map((risk) => (
-                      <tr key={risk}>
-                        <td className="lp-table__td">
-                          <RiskBadge risk={risk} />
-                        </td>
-                        <td className="lp-table__td">{summary.riskCounts[risk]}</td>
-                      </tr>
-                    ))}
+                    {[...RISKS].reverse().map((risk) => {
+                      const count = summary.riskCounts[risk];
+                      const percent = Math.round((count / summary.scanCount) * 100);
+                      return (
+                        <tr key={risk}>
+                          <td className="lp-table__td">
+                            <RiskBadge risk={risk} />
+                          </td>
+                          <td className="lp-table__td">{count}</td>
+                          <td className="lp-table__td">
+                            <ShareBar label={risk} percent={percent} />
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -101,7 +115,7 @@ export default function DashboardPage() {
                 <table className="lp-table__table">
                   <thead>
                     <tr>
-                      <th className="lp-table__th" scope="col">File name</th>
+                      <th className="lp-table__th" scope="col">File</th>
                       <th className="lp-table__th" scope="col">Scanned at</th>
                       <th className="lp-table__th" scope="col">Overall risk</th>
                       <th className="lp-table__th" scope="col">Findings</th>
@@ -122,15 +136,30 @@ export default function DashboardPage() {
                 </table>
               </div>
             </div>
-            <div className="lp-card__footer">
-              <Link className="lp-link lp-link--standalone" href="/findings">
-                View all findings
-              </Link>
-            </div>
           </section>
         </>
       )}
     </main>
+  );
+}
+
+function ShareBar({ label, percent }: { label: string; percent: number }) {
+  return (
+    <div className="lp-progress lp-progress--full-width">
+      <div className="lp-progress__row">
+        <div
+          className="lp-progress__track"
+          role="progressbar"
+          aria-label={`${label} share of files`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={percent}
+        >
+          <div className="lp-progress__fill" style={{ width: `${percent}%` }} />
+        </div>
+        <span className="lp-progress__value">{percent}%</span>
+      </div>
+    </div>
   );
 }
 

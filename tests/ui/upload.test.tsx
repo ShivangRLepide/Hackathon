@@ -42,7 +42,7 @@ test("signed-out visitors are sent back to sign-in", async () => {
 test("signed-in users see the upload form with the button disabled until a file is chosen", async () => {
   render(<UploadPage />);
   const button = await screen.findByRole("button", { name: "Upload file" });
-  expect(screen.getByRole("heading", { name: "Upload a file" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "Upload and scan" })).toBeInTheDocument();
   expect(button).toBeDisabled();
   chooseFile();
   expect(button).toBeEnabled();

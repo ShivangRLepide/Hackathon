@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { AppNav } from "../../components/AppNav";
+import { PageHeading } from "../../components/PageHeading";
 import { createSupabaseBrowserClient } from "../../lib/supabase/browser";
 
 type Risk = "None" | "Low" | "Medium" | "High" | "Critical";
@@ -100,7 +100,7 @@ export default function UploadPage() {
   if (checking) {
     return (
       <main className="page-body">
-        <h1 className="page-title">Upload a file</h1>
+        <h1 className="page-title">Upload and scan</h1>
         <div className="lp-message lp-message--info" role="status">
           <div className="lp-message__content">
             <div className="lp-message__text">
@@ -113,21 +113,13 @@ export default function UploadPage() {
   }
 
   return (
-    <main className="page-body">
-      <AppNav />
-      <nav className="lp-breadcrumb" aria-label="Breadcrumb">
-        <ol className="lp-breadcrumb__list">
-          <li className="lp-breadcrumb__item">
-            <Link className="lp-breadcrumb__link" href="/">Sign in</Link>
-            <span className="lp-breadcrumb__separator" aria-hidden="true">/</span>
-          </li>
-          <li className="lp-breadcrumb__item">
-            <span className="lp-breadcrumb__current" aria-current="page">Upload file</span>
-          </li>
-        </ol>
-      </nav>
-
-      <h1 className="page-title">Upload a file</h1>
+    <main className="app-main">
+      <AppNav current="upload" />
+      <PageHeading
+        current="Upload"
+        title="Upload and scan"
+        description="Upload a synthetic CSV or TXT file (up to 1 MiB) and run classification."
+      />
 
       <section className="lp-card lp-card--elevated lp-card--borderless" aria-labelledby="upload-title">
         <div className="lp-card__header">
