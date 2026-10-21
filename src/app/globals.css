@@ -31,15 +31,42 @@
   gap: var(--space-5);
 }
 
-/* Native file input has no Lepidus component; see the system gap note. */
+/* Native file input is visually hidden over a Lepidus secondary button (design.md file-input pattern). */
 .file-picker {
-  display: grid;
-  gap: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
 }
 
-.file-picker__label {
-  font-size: var(--typography-label-md-fontSize);
-  line-height: var(--typography-label-md-lineHeight);
+.file-picker__control {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.file-picker__control:has(.file-picker__input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.file-picker__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-picker__name {
+  font-size: var(--typography-body-md-fontSize);
+  color: var(--color-text-secondary);
+}
+
+.upload-submit {
+  justify-self: start;
 }
 
 /* Signed-in shell: fixed rail on the left, page column fills the rest of the viewport. */

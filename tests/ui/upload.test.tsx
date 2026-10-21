@@ -15,7 +15,7 @@ vi.mock("../../src/lib/supabase/browser", () => ({
   createSupabaseBrowserClient: () => ({ auth: { getUser: mockGetUser } }),
 }));
 
-const UPLOAD_LABEL = "Accepted types: CSV or TXT, 1 byte to 1 MiB";
+const UPLOAD_LABEL = "Choose file";
 
 function chooseFile(name = "sample.csv") {
   const input = screen.getByLabelText(UPLOAD_LABEL) as HTMLInputElement;
@@ -41,7 +41,7 @@ test("signed-out visitors are sent back to sign-in", async () => {
 
 test("signed-in users see the upload form with the button disabled until a file is chosen", async () => {
   render(<UploadPage />);
-  const button = await screen.findByRole("button", { name: "Upload file" });
+  const button = await screen.findByRole("button", { name: "Upload and scan" });
   expect(screen.getByRole("heading", { name: "Upload and scan" })).toBeInTheDocument();
   expect(button).toBeDisabled();
   chooseFile();
@@ -64,9 +64,9 @@ test("a successful scan shows the overall risk and each finding type", async () 
     ),
   );
   render(<UploadPage />);
-  await screen.findByRole("button", { name: "Upload file" });
+  await screen.findByRole("button", { name: "Upload and scan" });
   chooseFile();
-  fireEvent.click(screen.getByRole("button", { name: "Upload file" }));
+  fireEvent.click(screen.getByRole("button", { name: "Upload and scan" }));
 
   const heading = await screen.findByText("Scan result");
   expect(heading.closest("section")).toHaveTextContent("Overall risk: Low");
@@ -85,9 +85,9 @@ test("a rejected file shows the matching error message in an alert", async () =>
     ),
   );
   render(<UploadPage />);
-  await screen.findByRole("button", { name: "Upload file" });
+  await screen.findByRole("button", { name: "Upload and scan" });
   chooseFile("data.json");
-  fireEvent.click(screen.getByRole("button", { name: "Upload file" }));
+  fireEvent.click(screen.getByRole("button", { name: "Upload and scan" }));
 
   expect(await screen.findByRole("alert")).toHaveTextContent("Only CSV or TXT files are accepted.");
 });
@@ -103,9 +103,9 @@ test("a failed save shows a message and no results", async () => {
     ),
   );
   render(<UploadPage />);
-  await screen.findByRole("button", { name: "Upload file" });
+  await screen.findByRole("button", { name: "Upload and scan" });
   chooseFile();
-  fireEvent.click(screen.getByRole("button", { name: "Upload file" }));
+  fireEvent.click(screen.getByRole("button", { name: "Upload and scan" }));
 
   expect(await screen.findByRole("alert")).toHaveTextContent("The scan could not be saved");
   expect(screen.queryByText("Scan result")).not.toBeInTheDocument();
@@ -117,9 +117,9 @@ test("an expired session during scan sends the user back to sign-in", async () =
     vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: "not_signed_in" }), { status: 401 })),
   );
   render(<UploadPage />);
-  await screen.findByRole("button", { name: "Upload file" });
+  await screen.findByRole("button", { name: "Upload and scan" });
   chooseFile();
-  fireEvent.click(screen.getByRole("button", { name: "Upload file" }));
+  fireEvent.click(screen.getByRole("button", { name: "Upload and scan" }));
 
   await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/"));
 });

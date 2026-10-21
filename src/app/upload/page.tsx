@@ -118,12 +118,12 @@ export default function UploadPage() {
       <PageHeading
         current="Upload"
         title="Upload and scan"
-        description="Upload a synthetic CSV or TXT file (up to 1 MiB) and run classification."
+        description="Scan a synthetic CSV or TXT file (1 byte to 1 MiB). The file is checked on the server and discarded; only masked, grouped findings are saved."
       />
 
       <section className="lp-card lp-card--elevated lp-card--borderless" aria-labelledby="upload-title">
         <div className="lp-card__header">
-          <div className="lp-card__title" id="upload-title">Choose a file to scan</div>
+          <div className="lp-card__title" id="upload-title">Choose a file</div>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -139,33 +139,24 @@ export default function UploadPage() {
               </div>
             )}
 
-            <div className="lp-message lp-message--info" role="status">
-              <div className="lp-message__content">
-                <div className="lp-message__text">
-                  <h3 className="lp-message__title">Files are not stored</h3>
-                  <p className="lp-message__body">
-                    The file is scanned in memory. Only masked results are shown.
-                  </p>
-                </div>
-              </div>
-            </div>
-
             <div className="file-picker">
-              <label className="file-picker__label" htmlFor="upload-file">
-                Accepted types: CSV or TXT, 1 byte to 1 MiB
-              </label>
-              <input
-                id="upload-file"
-                name="file"
-                type="file"
-                accept=".csv,.txt,text/csv,text/plain"
-                disabled={scanning}
-                onChange={(event) => {
-                  setFile(event.target.files?.[0] ?? null);
-                  setError(null);
-                  setOutcome(null);
-                }}
-              />
+              <span className="file-picker__control lp-button lp-button--secondary lp-button--md">
+                Choose file
+                <input
+                  name="file"
+                  type="file"
+                  className="file-picker__input"
+                  aria-label="Choose file"
+                  accept=".csv,.txt,text/csv,text/plain"
+                  disabled={scanning}
+                  onChange={(event) => {
+                    setFile(event.target.files?.[0] ?? null);
+                    setError(null);
+                    setOutcome(null);
+                  }}
+                />
+              </span>
+              <span className="file-picker__name">{file ? file.name : "No file chosen"}</span>
             </div>
 
             {scanning && (
@@ -220,15 +211,13 @@ export default function UploadPage() {
                 )}
               </section>
             )}
-          </div>
 
-          <div className="lp-card__footer footer-actions">
             <button
-              className="lp-button lp-button--primary lp-button--md"
+              className="lp-button lp-button--primary lp-button--md upload-submit"
               type="submit"
               disabled={!file || scanning}
             >
-              Upload file
+              Upload and scan
             </button>
           </div>
         </form>
