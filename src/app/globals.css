@@ -42,25 +42,33 @@
   line-height: var(--typography-label-md-lineHeight);
 }
 
-/* Signed-in shell: fixed rail on the left, page column to its right. */
+/* Signed-in shell: fixed rail on the left, page column fills the rest of the viewport. */
+:root {
+  --app-rail-width: 100px;
+}
+
 .app-sidebar {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
+  width: var(--app-rail-width);
   height: 100vh;
 }
 
 .app-main {
-  --app-rail-width: 100px;
   box-sizing: border-box;
   min-height: 100vh;
-  max-width: 1040px;
   margin-left: var(--app-rail-width);
   padding: var(--space-9);
   display: grid;
   align-content: start;
   gap: var(--space-8);
+}
+
+/* Tables span the page column; the table element is otherwise sized to its content. */
+.app-main .lp-table__table {
+  width: 100%;
 }
 
 .page-heading {
