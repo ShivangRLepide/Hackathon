@@ -58,3 +58,89 @@ describe('answerQuestion', () => {
     assert.match(answerQuestion('help', summarise(scans)), /how many files you have scanned/);
   });
 });
+
+// Fixed clock for date questions. Scans in the list above fall on 19 to 21 October 2026 (UTC).
+const NOW_21_AFTERNOON = new Date('2026-10-21T15:00:00.000Z');
+
+describe('answerQuestion riskiest file', () => {
+  it('names the file with the highest risk', () => {
+    const answer = answerQuestion('what is my riskiest file?', summarise(scans), NOW_21_AFTERNOON);
+    assert.match(answer, /^Your riskiest file is newer\.txt, with Critical overall risk and 4 findings, scanned at .* UTC\.$/);
+  });
+
+  it('breaks a tie on risk by the number of findings', () => {
+    const tied: ScanRow[] = [
+      { id: 'a', file_name: 'few.csv', created_at: '2026-10-21T10:00:00.000+00:00', overall_risk: 'Critical', total_findings: 2 },
+      { id: 'b', file_name: 'many.csv', created_at: '2026-10-20T10:00:00.000+00:00', overall_risk: 'Critical', total_findings: 5 },
+    ];
+    assert.match(answerQuestion('most sensitive file?', summarise(tied)), /^Your riskiest file is many\.csv,/);
+  });
+
+  it('prefers the newer scan when risk and findings are equal', () => {
+    const tied: ScanRow[] = [
+      { id: 'o', file_name: 'old.csv', created_at: '2026-10-20T10:00:00.000+00:00', overall_risk: 'High', total_findings: 2 },
+      { id: 'n', file_name: 'new.csv', created_at: '2026-10-21T10:00:00.000+00:00', overall_risk: 'High', total_findings: 2 },
+    ];
+    assert.match(answerQuestion('worst file', summarise(tied)), /^Your riskiest file is new\.csv,/);
+  });
+
+  it('says so when every file has no findings', () => {
+    const clean: ScanRow[] = [
+      { id: 'c', file_name: 'clean.txt', created_at: '2026-10-20T10:00:00.000+00:00', overall_risk: 'None', total_findings: 0 },
+    ];
+    assert.equal(answerQuestion('riskiest file?', summarise(clean)), 'None of your files has any sensitive-data findings.');
+  });
+});
+
+describe('answerQuestion date ranges', () => {
+  it('answers for today in UTC', () => {
+    assert.equal(
+      answerQuestion('what did I scan today?', summarise(scans), NOW_21_AFTERNOON),
+      'Today you scanned 2 files and found 6 findings.',
+    );
+  });
+
+  it('answers for yesterday and excludes today', () => {
+    assert.equal(
+      answerQuestion('what did I scan yesterday?', summarise(scans), NOW_21_AFTERNOON),
+      'Yesterday you scanned 1 file and found 1 finding.',
+    );
+  });
+
+  it('counts the last N days including today', () => {
+    assert.equal(
+      answerQuestion('files scanned in the last 7 days?', summarise(scans), NOW_21_AFTERNOON),
+      'In the last 7 days you scanned 4 files and found 7 findings.',
+    );
+  });
+
+  it('uses the singular for one day', () => {
+    assert.equal(
+      answerQuestion('last 1 day', summarise(scans), NOW_21_AFTERNOON),
+      'In the last 1 day you scanned 2 files and found 6 findings.',
+    );
+  });
+
+  it('maps last week and last month to 7 and 30 days', () => {
+    assert.equal(
+      answerQuestion('what was scanned last week?', summarise(scans), NOW_21_AFTERNOON),
+      'In the last 7 days you scanned 4 files and found 7 findings.',
+    );
+    assert.equal(
+      answerQuestion('scans in the past month', summarise(scans), NOW_21_AFTERNOON),
+      'In the last 30 days you scanned 4 files and found 7 findings.',
+    );
+  });
+
+  it('asks for a valid range when the number of days is out of bounds', () => {
+    assert.equal(answerQuestion('last 0 days', summarise(scans), NOW_21_AFTERNOON), 'Ask about 1 to 365 days.');
+    assert.equal(answerQuestion('last 400 days', summarise(scans), NOW_21_AFTERNOON), 'Ask about 1 to 365 days.');
+  });
+
+  it('still treats "last scan" as the latest scan question', () => {
+    assert.match(
+      answerQuestion('what was my last scan?', summarise(scans), NOW_21_AFTERNOON),
+      /^Your latest scan is newer\.txt,/,
+    );
+  });
+});

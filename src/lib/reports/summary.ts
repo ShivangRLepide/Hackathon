@@ -5,6 +5,8 @@ export interface Summary {
   findingTotal: number;
   highOrCriticalScans: number;
   riskCounts: Record<Risk, number>;
+  /** Every scan, newest first. */
+  scans: ScanRow[];
   recent: ScanRow[];
 }
 
@@ -22,11 +24,13 @@ export function summarise(scans: readonly ScanRow[], recentLimit = 5): Summary {
     findingTotal += scan.total_findings;
   }
 
+  const ordered = newestFirst(scans);
   return {
     scanCount: scans.length,
     findingTotal,
     highOrCriticalScans: riskCounts.High + riskCounts.Critical,
     riskCounts,
-    recent: newestFirst(scans).slice(0, recentLimit),
+    scans: ordered,
+    recent: ordered.slice(0, recentLimit),
   };
 }

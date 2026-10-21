@@ -7,10 +7,17 @@ import { EmptyState, Notice, RiskBadge } from "@/components/Lepidus";
 import { DETECTOR_LABEL, DETECTOR_TYPES, RISKS } from "@/lib/reports/model";
 import { formatTimestamp } from "@/lib/reports/format";
 import {
+  DEFAULT_SORT,
   filterFindings,
   joinFindings,
+  paginate,
+  searchFindings,
+  sortFindings,
+  toggleSort,
   type ReportFinding,
   type RiskFilter,
+  type SortKey,
+  type SortState,
   type TypeFilter,
 } from "@/lib/reports/findings";
 import { loadReports } from "@/lib/reports/load";
@@ -32,6 +39,11 @@ export default function FindingsPage() {
   const [failed, setFailed] = useState(false);
   const [type, setType] = useState<TypeFilter>("all");
   const [risk, setRisk] = useState<RiskFilter>("all");
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortState>(DEFAULT_SORT);
+  const [requestedPage, setRequestedPage] = useState(1);
+  // Holds the page number while the pager input is being edited; null means show the current page.
+  const [pageDraft, setPageDraft] = useState<string | null>(null);
 
   useEffect(() => {
     if (!client) return;
@@ -48,8 +60,26 @@ export default function FindingsPage() {
     };
   }, [client]);
 
-  const visible = useMemo(() => (rows ? filterFindings(rows, { type, risk }) : []), [rows, type, risk]);
-  const filtersActive = type !== "all" || risk !== "all";
+  const sorted = useMemo(() => {
+    const filtered = rows ? filterFindings(rows, { type, risk }) : [];
+    return sortFindings(searchFindings(filtered, search), sort);
+  }, [rows, type, risk, search, sort]);
+  const pageData = useMemo(() => paginate(sorted, requestedPage), [sorted, requestedPage]);
+  const filtersActive = type !== "all" || risk !== "all" || search.trim() !== "";
+
+  function goToPage(page: number) {
+    setRequestedPage(Math.min(Math.max(1, page), pageData.pages));
+  }
+
+  function commitPageDraft() {
+    if (pageDraft !== null && /^\d+$/.test(pageDraft)) goToPage(Number(pageDraft));
+    setPageDraft(null);
+  }
+
+  function sortBy(key: SortKey) {
+    setSort((current) => toggleSort(current, key));
+    setRequestedPage(1);
+  }
 
   return (
     <main className="app-main">
@@ -77,46 +107,134 @@ export default function FindingsPage() {
       {rows && rows.length > 0 && (
         <>
           <div className="form-stack">
-            <FilterGroup legend="Finding type" options={TYPE_OPTIONS} value={type} onChange={setType} />
-            <FilterGroup legend="Risk" options={RISK_OPTIONS} value={risk} onChange={setRisk} />
+            <FilterGroup
+              legend="Finding type"
+              options={TYPE_OPTIONS}
+              value={type}
+              onChange={(value) => {
+                setType(value);
+                setRequestedPage(1);
+              }}
+            />
+            <FilterGroup
+              legend="Risk"
+              options={RISK_OPTIONS}
+              value={risk}
+              onChange={(value) => {
+                setRisk(value);
+                setRequestedPage(1);
+              }}
+            />
+            <div className="lp-input findings-search">
+              <div className="lp-input__row lp-input__row--label-top">
+                <label className="lp-input__label" htmlFor="findings-search">
+                  Search by file name
+                </label>
+                <div className="lp-input__field">
+                  <input
+                    className="lp-input__input"
+                    id="findings-search"
+                    type="search"
+                    value={search}
+                    onChange={(event) => {
+                      setSearch(event.target.value);
+                      setRequestedPage(1);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <p aria-live="polite">
-            Showing {visible.length} of {rows.length} findings.
-            {filtersActive ? " Filters are applied." : ""}
+            {sorted.length === 0
+              ? "No findings to show."
+              : `Showing ${pageData.firstIndex} to ${pageData.lastIndex} of ${sorted.length} findings.`}
+            {filtersActive ? " Filters or search are applied." : ""}
           </p>
 
-          {visible.length === 0 ? (
-            <EmptyState message="No findings match these filters. Choose other filters to see more results." />
+          {sorted.length === 0 ? (
+            <EmptyState message="No findings match these filters or search. Change them to see more results." />
           ) : (
-            <div className="lp-table">
-              <table className="lp-table__table">
-                <thead>
-                  <tr>
-                    <th className="lp-table__th" scope="col">File name</th>
-                    <th className="lp-table__th" scope="col">Scanned at</th>
-                    <th className="lp-table__th" scope="col">Finding type</th>
-                    <th className="lp-table__th" scope="col">Risk</th>
-                    <th className="lp-table__th" scope="col">Occurrences</th>
-                    <th className="lp-table__th" scope="col">Masked example</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {visible.map((finding) => (
-                    <tr key={finding.id}>
-                      <td className="lp-table__td">{finding.fileName}</td>
-                      <td className="lp-table__td">{formatTimestamp(finding.scannedAt)}</td>
-                      <td className="lp-table__td">{finding.detectorLabel}</td>
-                      <td className="lp-table__td">
-                        <RiskBadge risk={finding.risk} />
-                      </td>
-                      <td className="lp-table__td">{finding.occurrenceCount}</td>
-                      <td className="lp-table__td">{finding.maskedExample}</td>
+            <>
+              <div className="lp-table">
+                <table className="lp-table__table">
+                  <thead>
+                    <tr>
+                      <SortHeader label="File name" sortKey="fileName" sort={sort} onSort={sortBy} />
+                      <SortHeader label="Scanned at" sortKey="scannedAt" sort={sort} onSort={sortBy} />
+                      <th className="lp-table__th" scope="col">Finding type</th>
+                      <SortHeader label="Risk" sortKey="risk" sort={sort} onSort={sortBy} />
+                      <SortHeader label="Occurrences" sortKey="occurrenceCount" sort={sort} onSort={sortBy} />
+                      <th className="lp-table__th" scope="col">Masked example</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {pageData.items.map((finding) => (
+                      <tr key={finding.id}>
+                        <td className="lp-table__td">{finding.fileName}</td>
+                        <td className="lp-table__td">{formatTimestamp(finding.scannedAt)}</td>
+                        <td className="lp-table__td">{finding.detectorLabel}</td>
+                        <td className="lp-table__td">
+                          <RiskBadge risk={finding.risk} />
+                        </td>
+                        <td className="lp-table__td">{finding.occurrenceCount}</td>
+                        <td className="lp-table__td">{finding.maskedExample}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <nav className="lp-pagination" role="navigation" aria-label="Pagination">
+                <button
+                  className="lp-pagination__button"
+                  type="button"
+                  disabled={pageData.page === 1}
+                  onClick={() => goToPage(1)}
+                >
+                  First
+                </button>
+                <button
+                  className="lp-pagination__button"
+                  type="button"
+                  disabled={pageData.page === 1}
+                  onClick={() => goToPage(pageData.page - 1)}
+                >
+                  Previous
+                </button>
+                <input
+                  className="lp-pagination__page-input"
+                  type="number"
+                  min={1}
+                  max={pageData.pages}
+                  aria-label="Current page"
+                  value={pageDraft ?? pageData.page}
+                  onChange={(event) => setPageDraft(event.target.value)}
+                  onBlur={commitPageDraft}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") commitPageDraft();
+                  }}
+                />
+                <span className="lp-pagination__label">/{pageData.pages}</span>
+                <button
+                  className="lp-pagination__button"
+                  type="button"
+                  disabled={pageData.page === pageData.pages}
+                  onClick={() => goToPage(pageData.page + 1)}
+                >
+                  Next
+                </button>
+                <button
+                  className="lp-pagination__button"
+                  type="button"
+                  disabled={pageData.page === pageData.pages}
+                  onClick={() => goToPage(pageData.pages)}
+                >
+                  Last
+                </button>
+              </nav>
+            </>
           )}
 
           <div className="page-actions">
@@ -164,5 +282,27 @@ function FilterGroup<T extends string>({
         })}
       </div>
     </fieldset>
+  );
+}
+
+function SortHeader({
+  label,
+  sortKey,
+  sort,
+  onSort,
+}: {
+  label: string;
+  sortKey: SortKey;
+  sort: SortState;
+  onSort: (key: SortKey) => void;
+}) {
+  const active = sort.key === sortKey;
+  const arrow = active ? (sort.direction === "ascending" ? "\u2191" : "\u2193") : "";
+  return (
+    <th className="lp-table__th" scope="col" aria-sort={active ? sort.direction : "none"}>
+      <button type="button" className="sort-button" onClick={() => onSort(sortKey)}>
+        {label} <span aria-hidden="true">{arrow}</span>
+      </button>
+    </th>
   );
 }

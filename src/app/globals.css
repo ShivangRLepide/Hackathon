@@ -147,6 +147,105 @@
   justify-self: start;
 }
 
+/* Upload drop zone: dashed border; highlighted while a file is dragged over it. */
+.upload-dropzone {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  border: 1px dashed var(--color-border-default);
+  border-radius: var(--space-4);
+  background: var(--color-background-surface);
+  text-align: center;
+}
+
+.upload-dropzone--active {
+  border-color: var(--color-brand-primary);
+  border-style: solid;
+}
+
+.upload-dropzone__text {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.upload-dropzone__limit {
+  margin: 0;
+  font-size: var(--typography-body-md-fontSize);
+  color: var(--color-text-secondary);
+}
+
+.upload-failures {
+  margin: 0;
+  padding-left: var(--space-8);
+}
+
+.upload-queue {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.upload-queue__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.upload-queue__name {
+  overflow-wrap: anywhere;
+}
+
+.upload-result {
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.upload-result__file {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+
+/* Findings search: keeps the search field at a readable width. */
+.findings-search {
+  max-width: 360px;
+}
+
+/* Sortable column header: a text button that keeps the table header styling. */
+.sort-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sort-button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Inline delete confirmation shown in the scan history row. */
+.delete-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 /* Signed-in shell: fixed rail on the left, page column fills the rest of the viewport. */
 :root {
   --app-rail-width: 100px;

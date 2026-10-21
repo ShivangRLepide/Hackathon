@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkUpload, MAX_UPLOAD_BYTES } from '../../src/lib/upload/validate.ts';
+import { checkUpload, MAX_UPLOAD_BYTES, precheckUpload } from '../../src/lib/upload/validate.ts';
 
 const ADDITIONAL = fileURLToPath(new URL('../fixtures/additional/', import.meta.url));
 const encode = (text: string) => new TextEncoder().encode(text);
@@ -61,4 +61,17 @@ test('fixtures 28 to 30 are rejected as the expected results require', () => {
   assert.deepEqual(empty, { ok: false, reason: 'empty' });
   assert.deepEqual(unsupported, { ok: false, reason: 'unsupported_type' });
   assert.deepEqual(oversized, { ok: false, reason: 'oversized' });
+});
+
+test('precheckUpload passes a small CSV or TXT file without reading its content', () => {
+  assert.equal(precheckUpload('people.csv', 120), null);
+  assert.equal(precheckUpload('DATA.CSV', 3), null);
+  assert.equal(precheckUpload('notes.txt', MAX_UPLOAD_BYTES), null);
+});
+
+test('precheckUpload rejects an empty file, an oversized file and an unsupported extension', () => {
+  assert.equal(precheckUpload('empty.txt', 0), 'empty');
+  assert.equal(precheckUpload('big.txt', MAX_UPLOAD_BYTES + 1), 'oversized');
+  assert.equal(precheckUpload('data.json', 5), 'unsupported_type');
+  assert.equal(precheckUpload('csv', 5), 'unsupported_type');
 });
