@@ -1,0 +1,43 @@
+/* Layout wrappers only. Tokens only; no component internals. */
+.product-shell {
+  min-height: 100vh;
+  background: var(--color-background-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+}
+
+.page-body {
+  box-sizing: border-box;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-9);
+  display: grid;
+  gap: var(--space-8);
+}
+
+.page-title {
+  margin: 0;
+  font-size: var(--typography-heading-h2-fontSize);
+}
+
+.form-stack {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-5);
+}
+
+/* Native file input has no Lepidus component; see the system gap note. */
+.file-picker {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.file-picker__label {
+  font-size: var(--typography-label-md-fontSize);
+  line-height: var(--typography-label-md-lineHeight);
+}
