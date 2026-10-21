@@ -183,7 +183,7 @@ export default function DashboardPage() {
                             </div>
                           ) : (
                             <button
-                              className="lp-button lp-button--secondary lp-button--sm history-action"
+                              className="lp-button lp-button--danger lp-button--sm history-action"
                               type="button"
                               aria-label={`Delete ${scan.file_name}`}
                               onClick={() => {
@@ -265,7 +265,7 @@ function ShareBar({ label, percent }: { label: string; percent: number }) {
           aria-valuemax={100}
           aria-valuenow={percent}
         >
-          <div className="lp-progress__fill" style={{ width: `${percent}%` }} />
+          {percent > 0 && <div className="lp-progress__fill" style={{ width: `${percent}%` }} />}
         </div>
         <span className="lp-progress__value">{percent}%</span>
       </div>

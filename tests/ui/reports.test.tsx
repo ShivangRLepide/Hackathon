@@ -86,6 +86,9 @@ describe("DashboardPage", () => {
     const criticalMetric = screen.getByText("Critical-risk files", { selector: ".lp-card__title" }).closest("section") as HTMLElement;
     expect(within(criticalMetric).getByText("1")).toBeInTheDocument();
     expect(screen.getByRole("progressbar", { name: "Low share of files" })).toHaveAttribute("aria-valuenow", "50");
+    const high = screen.getByRole("progressbar", { name: "High share of files" });
+    expect(high).toHaveAttribute("aria-valuenow", "0");
+    expect(high.querySelector(".lp-progress__fill")).toBeNull();
 
     const history = screen.getByText("Scan history").closest("section") as HTMLElement;
     const rows = within(history).getAllByRole("row");

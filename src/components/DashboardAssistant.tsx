@@ -103,10 +103,12 @@ export function DashboardAssistant({ summary }: { summary: Summary }) {
 
       {!open && (
         <button type="button" className="assistant__launcher" onClick={() => setOpen(true)}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-            <path d="M4 5h16v11H9l-5 4z" />
+          <svg width="22" height="14" viewBox="0 0 40 26" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M10 2H16L6 24H0Z" />
+            <path d="M20 2H26L16 24H10Z" />
+            <path d="M30 2H36L26 24H20Z" />
           </svg>
-          Ask the dashboard
+          Ask
         </button>
       )}
     </div>

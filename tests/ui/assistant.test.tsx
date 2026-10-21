@@ -12,7 +12,7 @@ test("the assistant answers questions from the dashboard data", () => {
   render(<DashboardAssistant summary={summary} />);
   expect(screen.queryByRole("log")).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Ask the dashboard" }));
+  fireEvent.click(screen.getByRole("button", { name: "Ask" }));
   fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "How many files have I scanned?" } });
   fireEvent.click(screen.getByRole("button", { name: "Ask" }));
 
@@ -22,8 +22,8 @@ test("the assistant answers questions from the dashboard data", () => {
 
 test("the panel closes from its Close button and the toggle returns", () => {
   render(<DashboardAssistant summary={summary} />);
-  fireEvent.click(screen.getByRole("button", { name: "Ask the dashboard" }));
+  fireEvent.click(screen.getByRole("button", { name: "Ask" }));
   fireEvent.click(screen.getByRole("button", { name: "Close" }));
   expect(screen.queryByLabelText("Ask a question")).not.toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Ask the dashboard" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Ask" })).toBeInTheDocument();
 });
