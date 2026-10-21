@@ -104,6 +104,11 @@
   outline-offset: 2px;
 }
 
+.signin-switch {
+  margin: 0;
+  text-align: center;
+}
+
 /* Native file input is visually hidden over a Lepidus secondary button (design.md file-input pattern). */
 .file-picker {
   display: flex;
