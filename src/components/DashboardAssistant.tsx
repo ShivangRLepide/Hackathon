@@ -31,8 +31,11 @@ export function DashboardAssistant({ summary }: { summary: Summary }) {
           className="lp-card lp-card--elevated lp-card--borderless assistant__panel"
           aria-labelledby="assistant-title"
         >
-          <div className="lp-card__header">
+          <div className="lp-card__header assistant__header">
             <div className="lp-card__title" id="assistant-title">Dashboard assistant</div>
+            <button type="button" className="lp-button lp-button--secondary lp-button--sm" onClick={() => setOpen(false)}>
+              Close
+            </button>
           </div>
           <div className="lp-card__body form-stack">
             <div className="assistant__log" role="log" aria-live="polite">
@@ -65,15 +68,11 @@ export function DashboardAssistant({ summary }: { summary: Summary }) {
         </section>
       )}
 
-      <button
-        type="button"
-        className="lp-button lp-button--primary lp-button--md"
-        aria-expanded={open}
-        aria-controls="assistant-panel"
-        onClick={() => setOpen((value) => !value)}
-      >
-        {open ? "Close assistant" : "Ask the dashboard"}
-      </button>
+      {!open && (
+        <button type="button" className="lp-button lp-button--primary lp-button--md" onClick={() => setOpen(true)}>
+          Ask the dashboard
+        </button>
+      )}
     </div>
   );
 }

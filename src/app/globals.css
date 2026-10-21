@@ -120,6 +120,13 @@
   overflow-y: auto;
 }
 
+.assistant__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
 .assistant__log {
   display: grid;
   gap: var(--space-6);

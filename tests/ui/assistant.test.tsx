@@ -20,9 +20,10 @@ test("the assistant answers questions from the dashboard data", () => {
   expect(screen.getByLabelText("Ask a question")).toHaveValue("");
 });
 
-test("the panel closes from the toggle button", () => {
+test("the panel closes from its Close button and the toggle returns", () => {
   render(<DashboardAssistant summary={summary} />);
   fireEvent.click(screen.getByRole("button", { name: "Ask the dashboard" }));
-  fireEvent.click(screen.getByRole("button", { name: "Close assistant" }));
+  fireEvent.click(screen.getByRole("button", { name: "Close" }));
   expect(screen.queryByLabelText("Ask a question")).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Ask the dashboard" })).toBeInTheDocument();
 });
